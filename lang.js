@@ -11,14 +11,12 @@
     }
     return "en";
   }
-  var saved;
-  try { saved = localStorage.getItem("lang"); } catch (e) {}
-  var want = Object.prototype.hasOwnProperty.call(dirs, saved) ? saved : detect();
+  var want = detect();
   // Explicit language links from the store stay in that language. Only the root auto-selects.
   var rootPath = new URL(root).pathname;
   var atRoot = location.pathname === rootPath || location.pathname === rootPath + "index.html";
   if (atRoot && want !== document.documentElement.lang) {
-    location.replace(root + dirs[want] + location.hash);
+    location.replace(root + dirs[want] + location.search + location.hash);
     return;
   }
   var tracker = document.createElement("script");
@@ -26,9 +24,4 @@
   tracker.src = "https://cloud.umami.is/script.js";
   tracker.setAttribute("data-website-id", "592c511d-7af7-4aef-a215-2c7a1019bbd2");
   document.head.appendChild(tracker);
-  document.addEventListener("click", function (e) {
-    var a = e.target.closest && e.target.closest("nav.lang a[hreflang]");
-    if (!a) return;
-    try { localStorage.setItem("lang", a.getAttribute("hreflang")); } catch (err) {}
-  });
 })();
